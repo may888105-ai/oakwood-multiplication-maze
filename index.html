@@ -1,61 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Oakwood School | Multiplication Maze</title>
 <style>
-:root{--navy:#142c4e;--blue:#2876c7;--gold:#f5c451;--ink:#173453;--mint:#d9f5e1}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#dbeafe,#f8fafc 55%,#fef3c7);color:var(--ink);min-height:100vh;padding:20px}
-main{max-width:850px;margin:auto}.hero{background:var(--navy);color:white;padding:24px;border-radius:22px;box-shadow:0 12px 30px #142c4e30}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.school{letter-spacing:.12em;font-size:.78rem;color:#d8e8ff}.score{background:var(--gold);color:var(--navy);font-weight:900;padding:12px 16px;border-radius:14px;font-size:1.15rem}.muted{color:#d8e8ff}.progress{display:flex;gap:7px;margin-top:18px}.progress span{height:9px;flex:1;border-radius:20px;background:#536a86}.progress span.done{background:var(--gold)}
-.panel{background:white;border:1px solid #d8e1ec;border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 8px 22px #142c4e12}.map{background:#eaf3ff}.stations{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.station{background:white;border:1px solid #cbd5e1;border-radius:14px;padding:13px;text-align:center}.station.current{border:2px solid #d89b25;background:#fff4d6}.station.cleared{background:#d1f2db}.station b{display:block;font-size:1.45rem}.station small{color:#52677f}.eyebrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;font-weight:800;color:#426b9a}.tag{background:#eaf3ff;padding:6px 10px;border-radius:30px}.question{font-size:clamp(1.25rem,3vw,1.7rem);margin:15px 0}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.answer{border:1px solid #cbd5e1;background:#f8fafc;border-radius:14px;padding:16px;font-size:1.1rem;font-weight:750;cursor:pointer;color:var(--ink)}.answer:hover{border-color:var(--blue);background:#eff6ff}.answer:disabled{cursor:default;opacity:.9}.answer.correct{background:#d9f5e1;border:2px solid #269653}.answer.incorrect{background:#fce4e4;border:2px solid #d44}.feedback{padding:15px;border-radius:14px;margin-top:15px;font-weight:650}.good{background:#d9f5e1;color:#176b36}.bad{background:#fce4e4;color:#912b2b}.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:800;cursor:pointer;background:var(--blue);color:white;margin-top:12px}.btn.secondary{background:#64748b}.dots{display:grid;grid-template-columns:repeat(4,35px);gap:12px;justify-content:center;padding:18px;background:#eaf3ff;border-radius:15px}.dot{width:27px;height:27px;background:#2876c7;border-radius:50%;box-shadow:inset -4px -5px #14518f}.finish{text-align:center;background:#fff2c8}.trophy{font-size:4rem}.footer{text-align:center;color:#64748b;font-size:.85rem;margin:22px}
-@media(max-width:520px){body{padding:12px}.panel{padding:16px}.answers{grid-template-columns:1fr}.stations{gap:6px}.station{padding:9px}.dots{grid-template-columns:repeat(4,30px);gap:9px}}
-</style>
-</head>
+:root{--navy:#102b4e;--blue:#2876c7;--gold:#ffd45a;--green:#28a45d;--red:#d94b4b;--ink:#183653}
+*{box-sizing:border-box}body{margin:0;padding:16px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(140deg,#dceeff,#f8fbff 55%,#fff0c7);min-height:100vh}
+main{max-width:980px;margin:auto}.hero{background:var(--navy);color:white;border-radius:22px;padding:20px 24px;box-shadow:0 10px 25px #102b4e30}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.school{letter-spacing:.14em;font-weight:800;color:#cce3ff;font-size:.8rem}
+h1{margin:5px 0;font-size:clamp(1.6rem,4vw,2.3rem)}.muted{color:#d5e6fb}.score{background:var(--gold);color:#173653;padding:10px 15px;border-radius:13px;font-weight:900;font-size:1.1rem}
+.panel{background:white;border:1px solid #d5e1ee;border-radius:20px;padding:18px;margin-top:16px;box-shadow:0 7px 20px #102b4e12}
+.maze-wrap{background:#eaf5e8;overflow:hidden}.maze-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.maze{position:relative;min-height:360px;border:5px solid #86b77d;border-radius:18px;background-color:#e6f4df;background-image:linear-gradient(#cde7c2 1px,transparent 1px),linear-gradient(90deg,#cde7c2 1px,transparent 1px);background-size:28px 28px;overflow:hidden;padding:14px}
+.path{position:absolute;left:8%;right:8%;top:48%;height:24px;border-radius:20px;background:#d6b77d;box-shadow:0 3px 0 #b28d56;transform:translateY(-50%)}
+.path:before{content:"";position:absolute;left:14%;right:14%;top:-92px;height:110px;border:22px solid #d6b77d;border-bottom:0;border-radius:18px 18px 0 0}
+.nodes{position:relative;z-index:2;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:150px 150px;align-items:center;height:320px}
+.node{justify-self:center;display:flex;flex-direction:column;align-items:center;gap:5px;font-weight:800;text-align:center;max-width:105px}
+.node:nth-child(1){grid-column:1;grid-row:2}.node:nth-child(2){grid-column:2;grid-row:1}.node:nth-child(3){grid-column:3;grid-row:2}.node:nth-child(4){grid-column:4;grid-row:1}.node:nth-child(5){grid-column:5;grid-row:2}.node:nth-child(6){grid-column:6;grid-row:1}
+.orb{width:54px;height:54px;border:4px solid white;border-radius:50%;background:#93a8bc;display:grid;place-items:center;font-size:1.45rem;box-shadow:0 3px 7px #17365335;transition:.25s}
+.node.done .orb{background:var(--green)}.node.here .orb{background:var(--gold);outline:4px solid #f2b82f;transform:scale(1.12);animation:pulse 1.3s infinite}
+.node small{font-size:.72rem;background:#fff;padding:3px 6px;border-radius:8px;box-shadow:0 2px 4px #17365318}
+@keyframes pulse{50%{box-shadow:0 0 0 9px #ffd45a55}}
+.player{position:absolute;z-index:4;top:48%;left:8%;font-size:2rem;transform:translate(-50%,-120%);transition:left .55s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 3px 2px #234)}
+.question-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#416b95;font-weight:800;font-size:.85rem}
+h2{margin:8px 0}.question{font-size:clamp(1.25rem,3vw,1.7rem);font-weight:850;margin:16px 0}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{padding:14px;border:2px solid #d5e1ee;background:#f7faff;border-radius:14px;font-size:1.08rem;font-weight:800;color:var(--ink);cursor:pointer}.answer:hover{border-color:var(--blue);background:#edf6ff}.answer:disabled{cursor:default}.answer.good{background:#dcf7e5;border-color:var(--green)}.answer.bad{background:#ffe3e3;border-color:var(--red)}
+.dots{display:grid;grid-template-columns:repeat(4,34px);gap:10px;justify-content:center;padding:16px;background:#eef6ff;border-radius:14px;margin:10px auto;width:max-content}.dot{width:27px;height:27px;border-radius:50%;background:#2876c7;box-shadow:inset -4px -4px #14518f}
+.feedback{margin-top:13px;padding:13px;border-radius:13px;font-weight:750}.success{background:#dcf7e5;color:#176b36}.retry{background:#ffe8e8;color:#922d2d}
+button.next{border:0;background:var(--blue);color:white;border-radius:12px;padding:12px 18px;font-weight:850;font-size:1rem;margin-top:12px;cursor:pointer}
+.finish{text-align:center;background:#fff3c9}.trophy{font-size:4rem}.footer{text-align:center;color:#64748b;font-size:.85rem;padding:20px}
+@media(max-width:600px){body{padding:9px}.panel{padding:13px}.maze{min-height:300px;padding:5px}.nodes{height:270px;grid-template-rows:125px 125px}.orb{width:40px;height:40px;font-size:1.1rem}.node{font-size:.7rem;max-width:60px}.node small{font-size:.6rem}.path{left:7%;right:7%}.path:before{top:-75px;height:90px}.player{font-size:1.6rem}.answers{grid-template-columns:1fr}}
+</style></head>
 <body><main>
-<header class="hero">
- <div class="top"><div><div class="school">OAKWOOD SCHOOL</div><h1 style="margin:5px 0">🏰 Multiplication Maze</h1><div class="muted">Grade 3 • Mathematics Adventure</div></div><div class="score">⭐ <span id="score">0</span> POINTS</div></div>
- <p class="muted">Solve six challenges, unlock the paths, and find the treasure castle!</p>
- <div class="top"><strong>YOUR PROGRESS</strong><strong id="progressText">0 / 6 STATIONS</strong></div><div class="progress" id="progress"></div>
-</header>
-<section class="panel map"><h2 style="margin-top:0">🗺️ Your Maze Map</h2><div class="stations" id="stations"></div></section>
-<section class="panel" id="game"></section>
-<div class="footer"><b>Oakwood School</b><br>Game Designer: Abdulkareem Alfreh<br>Learn • Play • Multiply • Win!</div>
-</main>
+<header class="hero"><div class="top"><div><div class="school">OAKWOOD SCHOOL</div><h1>🏰 Multiplication Maze</h1><div class="muted">Grade 3 • Mathematics Adventure</div></div><div class="score">⭐ <span id="score">0</span> POINTS</div></div><p class="muted">Travel through the maze, solve each challenge, and unlock the treasure castle!</p></header>
+<section class="panel maze-wrap"><div class="maze-title"><h2>🗺️ Find your way to the castle</h2><b id="progressText">Station 1 of 6</b></div>
+<div class="maze"><div class="path"></div><div class="player" id="player">🧑‍🚀</div><div class="nodes" id="nodes"></div></div></section>
+<section class="panel" id="game" aria-live="polite"></section>
+<div class="footer"><b>Oakwood School</b><br>Game Designer: Abdulkareem Alfreh<br>Learn • Play • Multiply • Win!</div></main>
 <script>
 const data=[
- {name:"🌳 The Number Forest",type:"Multiple Choice",q:"What is 3 × 4?",a:["7","12","16","10"],correct:1,why:"3 groups of 4 make 12!"},
- {name:"🌉 The Truth Bridge",type:"True or False",q:"5 × 2 = 10",a:["True","False"],correct:0,why:"Correct! Five groups of two equal ten."},
- {name:"⭐ The Dot Cave",type:"Picture Challenge",q:"Count the dots. How many dots are there?",a:["8","10","12","15"],correct:2,why:"There are 3 rows of 4 dots: 3 × 4 = 12.",picture:true},
- {name:"🦁 The Lion's Gate",type:"Multiple Choice",q:"What is 6 × 3?",a:["18","15","21","12"],correct:0,why:"6 groups of 3 equal 18."},
- {name:"🚀 The Space Tunnel",type:"True or False",q:"4 × 5 = 25",a:["True","False"],correct:1,why:"False! 4 × 5 = 20."},
- {name:"🐉 The Dragon's Castle",type:"Final Challenge",q:"What is 9 × 5?",a:["40","35","45","50"],correct:2,why:"9 groups of 5 equal 45. You found the treasure!"}
+{name:"Number Forest",emoji:"🌳",type:"MULTIPLE CHOICE",q:"What is 3 × 4?",a:["7","12","16","10"],correct:1,why:"3 groups of 4 make 12!"},
+{name:"Truth Bridge",emoji:"🌉",type:"TRUE OR FALSE",q:"5 × 2 = 10",a:["True","False"],correct:0,why:"Correct! Five groups of two equal ten."},
+{name:"Dot Cave",emoji:"⭐",type:"PICTURE CHALLENGE",q:"Count the dots. How many dots are there?",a:["8","10","12","15"],correct:2,why:"There are 3 rows of 4 dots: 3 × 4 = 12.",picture:true},
+{name:"Lion's Gate",emoji:"🦁",type:"MULTIPLE CHOICE",q:"What is 6 × 3?",a:["18","15","21","12"],correct:0,why:"6 groups of 3 equal 18."},
+{name:"Space Tunnel",emoji:"🚀",type:"TRUE OR FALSE",q:"4 × 5 = 25",a:["True","False"],correct:1,why:"False! 4 × 5 = 20."},
+{name:"Dragon Castle",emoji:"🐉",type:"FINAL CHALLENGE",q:"What is 9 × 5?",a:["40","35","45","50"],correct:2,why:"9 groups of 5 equal 45. You found the treasure!"}
 ];
-let current=0,score=0,cleared=0,locked=false,attempts=0;
+let current=0,score=0,locked=false,feedbackTimer=null;
 const $=id=>document.getElementById(id);
+function drawMaze(){
+ $('nodes').innerHTML=data.map((d,i)=>`<div class="node ${i<current?'done':''} ${i===current?'here':''}"><div class="orb">${i<current?'✓':d.emoji}</div><small>${i+1}. ${d.name}</small></div>`).join('');
+ $('progressText').textContent=current>=6?'Maze completed!':'Station '+(current+1)+' of 6';
+ $('score').textContent=score;
+ $('player').style.left=(8+current*16.8)+'%';
+}
 function render(){
- $('score').textContent=score;$('progressText').textContent=cleared+' / 6 STATIONS';
- $('progress').innerHTML=data.map((_,i)=>`<span class="${i<cleared?'done':''}"></span>`).join('');
- $('stations').innerHTML=data.map((d,i)=>`<div class="station ${i<cleared?'cleared':i===current?'current':''}"><b>${i<cleared?'🔓':i===current?'🚪':'🔒'}</b><strong>Station ${i+1}</strong><br><small>${i<cleared?'Cleared':i===current?'Current':'Locked'}</small></div>`).join('');
- if(cleared===6){$('game').className='panel finish';$('game').innerHTML=`<div class="trophy">🏆👑💎</div><h2>YOU DID IT!</h2><h2>Math Maze Champion!</h2><p>You completed all six multiplication stations and found the treasure!</p><h1>${score} / 60 ⭐</h1><p><b>Your reward: The Golden Math Trophy!</b></p><button class="btn" onclick="restart()">🔄 Play Again</button>`;return;}
+ drawMaze();
+ if(current>=6){$('game').className='panel finish';$('game').innerHTML=`<div class="trophy">🏆</div><h2>YOU ESCAPED THE MAZE!</h2><p>You reached the treasure castle and completed all six challenges!</p><h2>⭐ ${score} / 60 POINTS</h2><p>Fantastic multiplication skills!</p><button class="next" onclick="restart()">🔄 Play Again</button>`;return}
  const d=data[current];
  $('game').className='panel';
- $('game').innerHTML=`<div class="eyebrow"><span class="tag">STATION ${current+1} OF 6</span><span class="tag">${d.type}</span></div><h2>${d.name}</h2><h3 class="question">${d.q}</h3>${d.picture?'<div class="dots">'+Array(12).fill('<span class="dot"></span>').join('')+'</div>':''}<p><b>CHOOSE YOUR ANSWER:</b></p><div class="answers">${d.a.map((a,i)=>`<button class="answer" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join('')}</div><div id="feedback"></div><p style="color:#64748b;font-size:.85rem">⭐ Correct answer: +10 points • Wrong answer: move back one station.</p>`;
+ $('game').innerHTML=`<div class="question-head"><span>${d.type}</span><span>⭐ ${score} POINTS</span></div><h2>${d.emoji} ${d.name}</h2><div class="question">${d.q}</div>${d.picture?'<div class="dots">'+Array.from({length:12},()=>'<span class="dot"></span>').join('')+'</div>':''}<div class="answers">${d.a.map((a,i)=>`<button class="answer" onclick="answer(${i})">${a}</button>`).join('')}</div><div id="feedback"></div>`;
 }
 function answer(i){
- if(locked)return;locked=true;attempts++;
- const d=data[current],buttons=[...document.querySelectorAll('.answer')];
- buttons.forEach((b,j)=>{b.disabled=true;if(j===d.correct)b.classList.add('correct');if(j===i&&i!==d.correct)b.classList.add('incorrect');});
- if(i===d.correct){
-   score+=10;cleared=Math.max(cleared,current+1);
-   $('feedback').innerHTML=`<div class="feedback good">🎉 Excellent! Correct answer!<br>${d.why}<br>+10 points ⭐</div><button class="btn" onclick="advance()">${current===5?'🏆 Claim Your Treasure':'Unlock Next Path →'}</button>`;
-   $('score').textContent=score;
- }else{
-   $('feedback').innerHTML=`<div class="feedback bad">❌ Not quite! The correct answer is ${d.a[d.correct]}.<br>${d.why}<br>Try again after moving back one step.</div><button class="btn secondary" onclick="stepBack()">↩ Move Back One Step</button>`;
- }
+ if(locked)return;locked=true;
+ const d=data[current],ok=i===d.correct;
+ document.querySelectorAll('.answer').forEach((b,n)=>{b.disabled=true;if(n===d.correct)b.classList.add('good');if(n===i&&!ok)b.classList.add('bad')});
+ const box=$('feedback');
+ if(ok){score+=10;box.className='feedback success';box.innerHTML='🎉 Correct! '+d.why+'<br>🔓 The path is open!';}
+ else{const old=current;current=Math.max(0,current-1);box.className='feedback retry';box.innerHTML='❌ Not quite! '+d.why+'<br>↩️ Move back one step on the maze. Try the previous station again.';drawMaze();}
+ $('score').textContent=score;
+ if(ok){$('player').style.left=(8+(current+1)*16.8)+'%';}
+ const b=document.createElement('button');b.className='next';b.textContent=ok?'Continue ➜':'Try Again';b.onclick=()=>{if(ok)current++;locked=false;render()};box.appendChild(document.createElement('br'));box.appendChild(b);
+ if(ok){const audio=()=>{try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.22);o.start();o.stop(c.currentTime+.22)}catch(e){}};audio()}
 }
-function advance(){current++;locked=false;render();}
-function stepBack(){current=Math.max(0,current-1);locked=false;render();}
-function restart(){current=0;score=0;cleared=0;locked=false;attempts=0;render();}
+function restart(){current=0;score=0;locked=false;render()}
 render();
 </script></body></html>
