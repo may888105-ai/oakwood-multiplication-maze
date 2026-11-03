@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oakwood School | Multiplication Maze</title>
+<style>
+:root{--navy:#142c4e;--blue:#2876c7;--gold:#f5c451;--ink:#173453;--mint:#d9f5e1}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#dbeafe,#f8fafc 55%,#fef3c7);color:var(--ink);min-height:100vh;padding:20px}
+main{max-width:850px;margin:auto}.hero{background:var(--navy);color:white;padding:24px;border-radius:22px;box-shadow:0 12px 30px #142c4e30}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.school{letter-spacing:.12em;font-size:.78rem;color:#d8e8ff}.score{background:var(--gold);color:var(--navy);font-weight:900;padding:12px 16px;border-radius:14px;font-size:1.15rem}.muted{color:#d8e8ff}.progress{display:flex;gap:7px;margin-top:18px}.progress span{height:9px;flex:1;border-radius:20px;background:#536a86}.progress span.done{background:var(--gold)}
+.panel{background:white;border:1px solid #d8e1ec;border-radius:20px;padding:22px;margin-top:18px;box-shadow:0 8px 22px #142c4e12}.map{background:#eaf3ff}.stations{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.station{background:white;border:1px solid #cbd5e1;border-radius:14px;padding:13px;text-align:center}.station.current{border:2px solid #d89b25;background:#fff4d6}.station.cleared{background:#d1f2db}.station b{display:block;font-size:1.45rem}.station small{color:#52677f}.eyebrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;font-weight:800;color:#426b9a}.tag{background:#eaf3ff;padding:6px 10px;border-radius:30px}.question{font-size:clamp(1.25rem,3vw,1.7rem);margin:15px 0}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.answer{border:1px solid #cbd5e1;background:#f8fafc;border-radius:14px;padding:16px;font-size:1.1rem;font-weight:750;cursor:pointer;color:var(--ink)}.answer:hover{border-color:var(--blue);background:#eff6ff}.answer:disabled{cursor:default;opacity:.9}.answer.correct{background:#d9f5e1;border:2px solid #269653}.answer.incorrect{background:#fce4e4;border:2px solid #d44}.feedback{padding:15px;border-radius:14px;margin-top:15px;font-weight:650}.good{background:#d9f5e1;color:#176b36}.bad{background:#fce4e4;color:#912b2b}.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:800;cursor:pointer;background:var(--blue);color:white;margin-top:12px}.btn.secondary{background:#64748b}.dots{display:grid;grid-template-columns:repeat(4,35px);gap:12px;justify-content:center;padding:18px;background:#eaf3ff;border-radius:15px}.dot{width:27px;height:27px;background:#2876c7;border-radius:50%;box-shadow:inset -4px -5px #14518f}.finish{text-align:center;background:#fff2c8}.trophy{font-size:4rem}.footer{text-align:center;color:#64748b;font-size:.85rem;margin:22px}
+@media(max-width:520px){body{padding:12px}.panel{padding:16px}.answers{grid-template-columns:1fr}.stations{gap:6px}.station{padding:9px}.dots{grid-template-columns:repeat(4,30px);gap:9px}}
+</style>
+</head>
+<body><main>
+<header class="hero">
+ <div class="top"><div><div class="school">OAKWOOD SCHOOL</div><h1 style="margin:5px 0">🏰 Multiplication Maze</h1><div class="muted">Grade 3 • Mathematics Adventure</div></div><div class="score">⭐ <span id="score">0</span> POINTS</div></div>
+ <p class="muted">Solve six challenges, unlock the paths, and find the treasure castle!</p>
+ <div class="top"><strong>YOUR PROGRESS</strong><strong id="progressText">0 / 6 STATIONS</strong></div><div class="progress" id="progress"></div>
+</header>
+<section class="panel map"><h2 style="margin-top:0">🗺️ Your Maze Map</h2><div class="stations" id="stations"></div></section>
+<section class="panel" id="game"></section>
+<div class="footer"><b>Oakwood School</b><br>Game Designer: Abdulkareem Alfreh<br>Learn • Play • Multiply • Win!</div>
+</main>
+<script>
+const data=[
+ {name:"🌳 The Number Forest",type:"Multiple Choice",q:"What is 3 × 4?",a:["7","12","16","10"],correct:1,why:"3 groups of 4 make 12!"},
+ {name:"🌉 The Truth Bridge",type:"True or False",q:"5 × 2 = 10",a:["True","False"],correct:0,why:"Correct! Five groups of two equal ten."},
+ {name:"⭐ The Dot Cave",type:"Picture Challenge",q:"Count the dots. How many dots are there?",a:["8","10","12","15"],correct:2,why:"There are 3 rows of 4 dots: 3 × 4 = 12.",picture:true},
+ {name:"🦁 The Lion's Gate",type:"Multiple Choice",q:"What is 6 × 3?",a:["18","15","21","12"],correct:0,why:"6 groups of 3 equal 18."},
+ {name:"🚀 The Space Tunnel",type:"True or False",q:"4 × 5 = 25",a:["True","False"],correct:1,why:"False! 4 × 5 = 20."},
+ {name:"🐉 The Dragon's Castle",type:"Final Challenge",q:"What is 9 × 5?",a:["40","35","45","50"],correct:2,why:"9 groups of 5 equal 45. You found the treasure!"}
+];
+let current=0,score=0,cleared=0,locked=false,attempts=0;
+const $=id=>document.getElementById(id);
+function render(){
+ $('score').textContent=score;$('progressText').textContent=cleared+' / 6 STATIONS';
+ $('progress').innerHTML=data.map((_,i)=>`<span class="${i<cleared?'done':''}"></span>`).join('');
+ $('stations').innerHTML=data.map((d,i)=>`<div class="station ${i<cleared?'cleared':i===current?'current':''}"><b>${i<cleared?'🔓':i===current?'🚪':'🔒'}</b><strong>Station ${i+1}</strong><br><small>${i<cleared?'Cleared':i===current?'Current':'Locked'}</small></div>`).join('');
+ if(cleared===6){$('game').className='panel finish';$('game').innerHTML=`<div class="trophy">🏆👑💎</div><h2>YOU DID IT!</h2><h2>Math Maze Champion!</h2><p>You completed all six multiplication stations and found the treasure!</p><h1>${score} / 60 ⭐</h1><p><b>Your reward: The Golden Math Trophy!</b></p><button class="btn" onclick="restart()">🔄 Play Again</button>`;return;}
+ const d=data[current];
+ $('game').className='panel';
+ $('game').innerHTML=`<div class="eyebrow"><span class="tag">STATION ${current+1} OF 6</span><span class="tag">${d.type}</span></div><h2>${d.name}</h2><h3 class="question">${d.q}</h3>${d.picture?'<div class="dots">'+Array(12).fill('<span class="dot"></span>').join('')+'</div>':''}<p><b>CHOOSE YOUR ANSWER:</b></p><div class="answers">${d.a.map((a,i)=>`<button class="answer" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join('')}</div><div id="feedback"></div><p style="color:#64748b;font-size:.85rem">⭐ Correct answer: +10 points • Wrong answer: move back one station.</p>`;
+}
+function answer(i){
+ if(locked)return;locked=true;attempts++;
+ const d=data[current],buttons=[...document.querySelectorAll('.answer')];
+ buttons.forEach((b,j)=>{b.disabled=true;if(j===d.correct)b.classList.add('correct');if(j===i&&i!==d.correct)b.classList.add('incorrect');});
+ if(i===d.correct){
+   score+=10;cleared=Math.max(cleared,current+1);
+   $('feedback').innerHTML=`<div class="feedback good">🎉 Excellent! Correct answer!<br>${d.why}<br>+10 points ⭐</div><button class="btn" onclick="advance()">${current===5?'🏆 Claim Your Treasure':'Unlock Next Path →'}</button>`;
+   $('score').textContent=score;
+ }else{
+   $('feedback').innerHTML=`<div class="feedback bad">❌ Not quite! The correct answer is ${d.a[d.correct]}.<br>${d.why}<br>Try again after moving back one step.</div><button class="btn secondary" onclick="stepBack()">↩ Move Back One Step</button>`;
+ }
+}
+function advance(){current++;locked=false;render();}
+function stepBack(){current=Math.max(0,current-1);locked=false;render();}
+function restart(){current=0;score=0;cleared=0;locked=false;attempts=0;render();}
+render();
+</script></body></html>
